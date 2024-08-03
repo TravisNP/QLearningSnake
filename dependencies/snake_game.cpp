@@ -196,9 +196,9 @@ std::tuple<std::string, int, int> SnakeGame::step(DIR dir) {
     return std::make_tuple(snake, left, REWARD_NOTHING);
 }
 
-void SnakeGame::playSingleSnake(const int NUM_ROUNDS) {
+void SnakeGame::playUserSnake(const int numRounds) {
     std::string userMove;
-    for (int round = 0; round < NUM_ROUNDS; ++round) {
+    for (int round = 0; round < numRounds; ++round) {
         std::cin >> userMove;
         if (userMoveToEnum.contains(userMove)) {
             if (!moveSnake(userMoveToEnum[userMove]))
@@ -211,6 +211,45 @@ void SnakeGame::playSingleSnake(const int NUM_ROUNDS) {
 
         printAll();
     }
+}
+
+void SnakeGame::playCompSnakeVisualize(StateActionSpace* stateActionSpace, const int numRounds) {
+    printBoard();
+    std::cout << std::endl;
+
+    DIR compMove;
+    int notFinished = 0;
+    for (int round = 0; round < numRounds && (notFinished == 0); ++round) {
+        compMove = getCompMove(stateActionSpace);
+        if (!moveSnake(compMove)) {
+            notFinished = -1;
+        } else if ((snake.size() - left) == BOARD_SIZE_SQUARED_TIMES_2) {
+            notFinished = 1;
+        }
+
+        printBoard();
+        std::cout << std::endl;
+    }
+
+    if (notFinished == 0)
+        std::cout << "Outcome: Round Limit Reached" << std::endl;
+    else if (notFinished == -1)
+        std::cout << "Outcome: Death" << std::endl;
+    else if (notFinished == 1)
+        std::cout << "Outcome: Win!" << std::endl;
+    else
+        throw CustomException("playCompSNakeVisualize - notFinished is not -1, 0, or 1");
+}
+
+DIR SnakeGame::getCompMove(StateActionSpace* stateActionSpace) {
+    std::string_view snakeNoFruit = std::string_view(snake.c_str() + left, snake.size() - left);
+    std::pair<std::string, REFLECTION> stateReflection = stateActionSpace->stateToOriginalState.at(snakeNoFruit);
+    std::pair<int, int> stateFruitLoc = stateActionSpace->direction_mappings.functionMaps[stateReflection.second].first(snake[0], snake[1], BOARD_SIZE);
+    std::vector<double> qtable = stateActionSpace->fruitToStates[stateFruitLoc.first][stateFruitLoc.second][stateReflection.first];
+    DIR reflectedAction = static_cast<DIR>(std::distance(qtable.begin(), std::max_element(qtable.begin(), qtable.end())));
+    DIR boardAction = stateActionSpace->direction_mappings.functionMaps[stateReflection.second].second[reflectedAction];
+
+    return boardAction;
 }
 
 void SnakeGame::printBoard() {

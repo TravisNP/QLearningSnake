@@ -16,7 +16,7 @@ int main()
     }
 
     snakeGame->printAll();
-    snakeGame->playSingleSnake(NUM_ROUNDS);
+    snakeGame->playUserSnake(NUM_ROUNDS);
 
     delete snakeGame;
 

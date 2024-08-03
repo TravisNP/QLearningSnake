@@ -26,7 +26,8 @@ int main() {
     }
 
     MapSerializer::loadQTable(stateActionSpace->fruitToStates, model_name);
-    stateActionSpace->printQTable();
+
+    snakeGame->playCompSnakeVisualize(stateActionSpace, 50);
 
     return 0;
 }

@@ -7,7 +7,9 @@
 #include<unordered_map>
 #include<limits.h>
 #include<math.h>
+#include<boost/unordered/unordered_flat_map.hpp>
 
+#include "state_action_space.h"
 #include "enums.h"
 #include "custom_exceptions.h"
 
@@ -93,9 +95,21 @@ public:
 
     /**
      * Plays the snake game in user mode
-     * @param NUM_ROUNDS the max number of rounds
+     * @param numRounds the max number of rounds
      */
-    void playSingleSnake(const int NUM_ROUNDS = 50);
+    void playUserSnake(const int numRounds = 50);
+
+    /**
+     * Plays the snake game in computer mode and visualizes the game in the terminal
+     * @param qtable the model
+     */
+    void playCompSnakeVisualize(StateActionSpace* stateActionSpace, const int numRounds);
+
+    /**
+     * Gets the computer move by taking the argmax of the qtable for the respective state
+     * @param qtable the move
+     */
+    DIR getCompMove(StateActionSpace* stateActionSpace);
 
     /**
      * Resets the snake game to the default beginning state
