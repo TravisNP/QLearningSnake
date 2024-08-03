@@ -24,6 +24,14 @@ $(BUILD_DIR)/train_model.o: train_model.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 # Compiles all the object files together into one executable
+test_model: $(OBJS) $(BUILD_DIR)/test_model.o
+	$(CXX) $(CXXFLAGS) -o test_model $(OBJS) $(BUILD_DIR)/test_model.o $(SRLFLAGS)
+
+$(BUILD_DIR)/test_model.o: test_model.cpp
+	@mkdir -p $(BUILD_DIR)
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+# Compiles all the object files together into one executable
 user: $(OBJS) $(BUILD_DIR)/user.o
 	$(CXX) $(CXXFLAGS) -o user $(OBJS) $(BUILD_DIR)/user.o $(SRLFLAGS)
 

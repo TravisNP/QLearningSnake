@@ -4,10 +4,10 @@
 #include "dependencies/map_serializer.h"
 
 // size of the square board
-#define BOARD_SIZE 2
+#define BOARD_SIZE 3
 
 // number of episoes
-#define NUM_EPISODES 1'000'00
+#define NUM_EPISODES 1'000
 
 // maximum number of rounds per episode
 #define NUM_ROUNDS 100
@@ -25,12 +25,6 @@
 #define GAMMA .95
 
 #define LEARNING_RATE .7
-
-std::string formatDouble(double value) {
-    std::ostringstream out;
-    out << std::defaultfloat << value;
-    return out.str();
-}
 
 /**
  * Trains the model (qtable)
@@ -146,7 +140,8 @@ void train(SnakeGame* snakeGame, StateActionSpace* stateActionSpace) {
         }
 
         if (episode % 100000 == 0) {
-            std::cout << episode << std::endl;
+            if (episode != 0)
+                std::cout << episode << std::endl;
         }
     }
 }
@@ -174,7 +169,12 @@ int main()
 
     train(snakeGame, stateActionSpace);
 
-    std::string fileName = "model_BS" + formatDouble(BOARD_SIZE) + "_EP" + formatDouble(NUM_EPISODES) + "_R" + formatDouble(NUM_ROUNDS)
+    auto formatDouble = [](double value) {
+        std::ostringstream out;
+        out << std::defaultfloat << value;
+        return out.str();
+    };
+    std::string fileName = "models/model_BS" + formatDouble(BOARD_SIZE) + "_EP" + formatDouble(NUM_EPISODES) + "_R" + formatDouble(NUM_ROUNDS)
                              + "_MXE" + formatDouble(MAX_EPSILON) + "_MNE" + formatDouble(MIN_EPSILON) + "_DR" + formatDouble(DECAY_RATE)
                              + "_G" + formatDouble(GAMMA) + "_LR" + formatDouble(LEARNING_RATE) + ".dat";
 
