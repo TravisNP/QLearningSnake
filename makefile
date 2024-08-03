@@ -46,5 +46,5 @@ $(BUILD_DIR)/%.o: $(DEPENDENCIES_DIR)/%.cpp
 
 # Removes the build directory, all object files, and the executable
 clean:
-	rm -f train_model user $(BUILD_DIR)/*.o
+	rm -f train_model user test_model $(BUILD_DIR)/*.o
 	rm -rf $(BUILD_DIR)
