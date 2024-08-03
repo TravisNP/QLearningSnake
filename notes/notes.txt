@@ -1,0 +1,19 @@
+1. Rewards
+
+POSITIVES
+high positive reward for 90% completion
+positive reward for picking up a fruit
+
+NEGATIVES
+highly negative reward for dying
+slightly negative reward for going to an empty space
+
+
+2. State space
+Pretty big
+Say one fruit and snake disconnected - 2^(BS^2) * BS
+For BS = 5, this is an upper bound of 838,860,800 states
+
+
+3. Action space
+Up, Down, Left, or Right
