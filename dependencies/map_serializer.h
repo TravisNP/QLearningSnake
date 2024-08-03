@@ -1,3 +1,5 @@
+// MapSerializer class was made with heavy help from chatgpt
+
 #ifndef MAP_VECTOR_SERIALIZER_HPP
 #define MAP_VECTOR_SERIALIZER_HPP
 
