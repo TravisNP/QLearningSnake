@@ -5,7 +5,7 @@
 
 #include "custom_exceptions.h"
 #include "direction_maps.h"
-#include "custom_structs.cpp"
+#include "custom_structs.h"
 
 class StateActionSpace {
     private:

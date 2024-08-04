@@ -14,13 +14,16 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 
+#include "custom_structs.h"
+
 class MapSerializer {
 public:
+
     // Serialize the vector of unordered_flat_map to a file
-    static void saveQTable(const std::vector<std::vector<boost::unordered_flat_map<std::string, std::vector<double>>>>& mapVector, const std::string& filename);
+    static void saveQTable(const Model &model, const std::string& filename);
 
     // Deserialize the vector of unordered_flat_map from a file
-    static void loadQTable(std::vector<std::vector<boost::unordered::unordered_flat_map<std::string, std::vector<double>>>>& mapVector, const std::string& filename);
+    static void loadQTable(Model &model, const std::string& filename);
 };
 
 #endif // MAP_VECTOR_SERIALIZER_HPP

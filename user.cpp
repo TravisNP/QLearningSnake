@@ -1,6 +1,6 @@
 #include "dependencies/snake_game.h"
 
-#define BOARD_SIZE 2
+#define BOARD_SIZE 4
 #define NUM_FRUIT 1
 #define NUM_ROUNDS 1000
 

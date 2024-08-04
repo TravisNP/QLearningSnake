@@ -2,19 +2,16 @@
 #include "dependencies/state_action_space.h"
 #include "dependencies/map_serializer.h"
 
-int main() {
-    std::string model_name = "models/model_BS3_EP3e+06_R100_MXE1_MNE0.01_DR0.0005_G0.95_LR0.7.dat";
-    const int BOARD_SIZE = model_name[15] - '0';
-
-    StateActionSpace* stateActionSpace;
-
-    try {
-        stateActionSpace = new StateActionSpace(BOARD_SIZE);
-    } catch(CustomException& e) {
-        std::cout << "ERROR: " << e.getMessage() << std::endl;
-        delete stateActionSpace;
+int main(int argc, char* argv[]) {
+    if (argc != 2) {
+        std::cout << "Usage: ./test_model <model.dat>" << std::endl;
         return -1;
     }
+
+    Model model;
+    std::string model_name = argv[1];
+    MapSerializer::loadQTable(model, model_name);
+    int BOARD_SIZE = model.boardSize;
 
     SnakeGame* snakeGame;
     try {
@@ -25,9 +22,19 @@ int main() {
         return -1;
     }
 
-    MapSerializer::loadQTable(stateActionSpace->fruitToStates, model_name);
+    StateActionSpace* stateActionSpace;
+    try {
+        stateActionSpace = new StateActionSpace(BOARD_SIZE);
+    } catch(CustomException& e) {
+        std::cout << "ERROR: " << e.getMessage() << std::endl;
+        delete stateActionSpace;
+        return -1;
+    }
 
-    snakeGame->playCompSnakeVisualize(stateActionSpace, 50);
+
+    stateActionSpace->fruitToStates = model.qtable;
+
+    snakeGame->playCompSnakeVisualize(stateActionSpace, 100);
 
     return 0;
 }

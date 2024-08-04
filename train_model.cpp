@@ -7,10 +7,10 @@
 #define BOARD_SIZE 3
 
 // number of episoes
-#define NUM_EPISODES 1'000
+#define NUM_EPISODES 5'000'000
 
 // maximum number of rounds per episode
-#define NUM_ROUNDS 100
+#define NUM_ROUNDS 50
 
 // Maximum epsilon value
 #define MAX_EPSILON 1.0
@@ -139,7 +139,7 @@ void train(SnakeGame* snakeGame, StateActionSpace* stateActionSpace) {
 
         }
 
-        if (episode % 100000 == 0) {
+        if (episode % 100'000 == 0) {
             if (episode != 0)
                 std::cout << episode << std::endl;
         }
@@ -174,11 +174,13 @@ int main()
         out << std::defaultfloat << value;
         return out.str();
     };
+
     std::string fileName = "models/model_BS" + formatDouble(BOARD_SIZE) + "_EP" + formatDouble(NUM_EPISODES) + "_R" + formatDouble(NUM_ROUNDS)
                              + "_MXE" + formatDouble(MAX_EPSILON) + "_MNE" + formatDouble(MIN_EPSILON) + "_DR" + formatDouble(DECAY_RATE)
                              + "_G" + formatDouble(GAMMA) + "_LR" + formatDouble(LEARNING_RATE) + ".dat";
 
-    MapSerializer::saveQTable(stateActionSpace->fruitToStates, fileName);
+    Model model = Model(stateActionSpace->fruitToStates, BOARD_SIZE, NUM_EPISODES, NUM_ROUNDS, MAX_EPSILON, MIN_EPSILON, DECAY_RATE, GAMMA, LEARNING_RATE);
+    MapSerializer::saveQTable(model, fileName);
 
     delete stateActionSpace;
     delete snakeGame;
