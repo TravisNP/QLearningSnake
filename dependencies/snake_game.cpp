@@ -102,6 +102,9 @@ std::tuple<std::string, int, int> SnakeGame::resetGame() {
     --emptyCount.second[INITIAL_ROW_POS];
     snake += std::to_string(INITIAL_ROW_POS) + std::to_string(INITIAL_COL_POS);
 
+    // For testing purposes, the random number generator is reset so all tests have the same rng
+    srand(++seed);
+
     // Add fruit to board
     for (int i = 0; i < NUM_FRUIT; ++i)
         addFruit();
@@ -109,7 +112,7 @@ std::tuple<std::string, int, int> SnakeGame::resetGame() {
     return std::make_tuple(snake, left, NOTHING);
 }
 
-SnakeGame::SnakeGame(const int board_size, const int numFruit, int snakeRowStart, int snakeColStart)
+SnakeGame::SnakeGame(const int board_size, const int numFruit, int snakeRowStart, int snakeColStart, unsigned int _seed)
     : BOARD_SIZE(board_size),
     BOARD_SIZE_SQUARED_TIMES_2(2*pow(board_size, 2)),
     INITIAL_ROW_POS(snakeRowStart),
@@ -119,7 +122,8 @@ SnakeGame::SnakeGame(const int board_size, const int numFruit, int snakeRowStart
     emptyCount({pow(board_size, 2), std::vector<int>(board_size, board_size)}),
     userMoveToEnum({{"w", UP}, {"s", DOWN}, {"a", LEFT}, {"d", RIGHT}}),
     snake("####"),
-    left(4)
+    left(4),
+    seed(_seed)
 
     {
     if (INITIAL_ROW_POS == INT_MIN)
@@ -128,7 +132,7 @@ SnakeGame::SnakeGame(const int board_size, const int numFruit, int snakeRowStart
         INITIAL_COL_POS = (BOARD_SIZE+1)/2 - 1;
     checkParameters(BOARD_SIZE, NUM_FRUIT, INITIAL_ROW_POS, INITIAL_COL_POS);
 
-    srand((unsigned) time(NULL));
+    srand(seed);
 
     // Put snake on board
     board[INITIAL_ROW_POS][INITIAL_COL_POS] = SNAKE;
@@ -196,9 +200,9 @@ std::tuple<std::string, int, int> SnakeGame::step(DIR dir) {
     return std::make_tuple(snake, left, REWARD_NOTHING);
 }
 
-void SnakeGame::playUserSnake(const int numRounds) {
+void SnakeGame::playUserSnake(const int maxRounds) {
     std::string userMove;
-    for (int round = 0; round < numRounds; ++round) {
+    for (int round = 0; round < maxRounds; ++round) {
         std::cin >> userMove;
         if (userMoveToEnum.contains(userMove)) {
             if (!moveSnake(userMoveToEnum[userMove]))
@@ -213,13 +217,13 @@ void SnakeGame::playUserSnake(const int numRounds) {
     }
 }
 
-void SnakeGame::playCompSnakeVisualize(StateActionSpace* stateActionSpace, const int numRounds) {
+void SnakeGame::playCompSnakeVisualize(StateActionSpace* stateActionSpace, const int maxRounds) {
     printBoard();
     std::cout << std::endl;
 
     DIR compMove;
     int notFinished = 0;
-    for (int round = 0; round < numRounds && (notFinished == 0); ++round) {
+    for (int round = 0; round < maxRounds && (notFinished == 0); ++round) {
         compMove = getCompMove(stateActionSpace);
         if (!moveSnake(compMove)) {
             notFinished = -1;
@@ -239,6 +243,22 @@ void SnakeGame::playCompSnakeVisualize(StateActionSpace* stateActionSpace, const
         std::cout << "Outcome: Win!" << std::endl;
     else
         throw CustomException("playCompSNakeVisualize - notFinished is not -1, 0, or 1");
+}
+
+CompInfo SnakeGame::playCompSnakeInfo(StateActionSpace* stateActionSpace, const int maxRounds) {
+    DIR compMove;
+    int notFinished = 0;
+    int round;
+    for (round = 0; round < maxRounds && (notFinished == 0); ++round) {
+        compMove = getCompMove(stateActionSpace);
+        if (!moveSnake(compMove)) {
+            notFinished = -1;
+        } else if ((snake.size() - left) == BOARD_SIZE_SQUARED_TIMES_2) {
+            notFinished = 1;
+        }
+    }
+
+    return CompInfo(round, notFinished, (snake.size() - left)/2);
 }
 
 DIR SnakeGame::getCompMove(StateActionSpace* stateActionSpace) {

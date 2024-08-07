@@ -8,8 +8,8 @@
             "type": "lldb",
             "request": "launch",
             "name": "lldb Debug",
-            "program": "${workspaceFolder}/main",
-            "args": [],
+            "program": "${workspaceFolder}/test_model",
+            "args": ["models/model_BS4_EP0_R1000_MXE1_MNE0.01_DR0.0005_G0.95_LR0.7.dat"],
             "cwd": "${workspaceFolder}"
         }
     ]

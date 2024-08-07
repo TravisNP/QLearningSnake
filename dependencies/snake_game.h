@@ -45,6 +45,9 @@ private:
     // pointer to snake tail
     int left;
 
+    // Seed of the random number generator
+    unsigned int seed;
+
     /**
      * Checks that all parameters to the constructor are valid
      * @param board_size the board size
@@ -84,7 +87,7 @@ public:
      * @param snakeRowStart the starting row of the snake
      * @param snakeColStart the starting column of the snake
      */
-    SnakeGame(const int board_size = 10, const int numFruit = 1, int snakeRowStart = INT_MIN, int snakeColStart = INT_MIN);
+    SnakeGame(const int board_size = 10, const int numFruit = 1, int snakeRowStart = INT_MIN, int snakeColStart = INT_MIN, unsigned int seen = time(NULL));
 
     /**
      * This moves the snake in the direction given and returns the new state and reward
@@ -95,15 +98,23 @@ public:
 
     /**
      * Plays the snake game in user mode
-     * @param numRounds the max number of rounds
+     * @param maxRounds the max number of rounds
      */
-    void playUserSnake(const int numRounds = 50);
+    void playUserSnake(const int maxRounds = 50);
 
     /**
      * Plays the snake game in computer mode and visualizes the game in the terminal
      * @param qtable the model
      */
     void playCompSnakeVisualize(StateActionSpace* stateActionSpace, const int numRounds);
+
+    /**
+     * Plays the snake game in computer mode and returns info about the result
+     * @param stateActionSpace the qtable and reflection information
+     * @param maxRounds the maximum number of rounds the simulation can run
+     * @return
+     */
+    CompInfo playCompSnakeInfo(StateActionSpace* stateActionSpace, const int maxROunds);
 
     /**
      * Gets the computer move by taking the argmax of the qtable for the respective state

@@ -4,13 +4,13 @@
 #include "dependencies/map_serializer.h"
 
 // size of the square board
-#define BOARD_SIZE 3
+#define BOARD_SIZE 4
 
 // number of episoes
-#define NUM_EPISODES 5'000'000
+#define NUM_EPISODES 100'000'000
 
 // maximum number of rounds per episode
-#define NUM_ROUNDS 50
+#define NUM_ROUNDS 1000
 
 // Maximum epsilon value
 #define MAX_EPSILON 1.0
@@ -87,26 +87,18 @@ void train(SnakeGame* snakeGame, StateActionSpace* stateActionSpace) {
 
         for (int round = 0; round < NUM_ROUNDS && episodeNotFinished; ++round) {
 
-            // std::string random = "Random";
 
             // Get action from the qtable using epsilon greedy policy
             if (dist(gen) > epsilon) {
                 std::vector<double> tempQTable = stateActionSpace->fruitToStates[stateFruitLoc.first][stateFruitLoc.second][stateReflection.first];
                 reflectedAction = static_cast<DIR>(std::distance(tempQTable.begin(), std::max_element(tempQTable.begin(), tempQTable.end())));
-                // random = "Chosen";
-            } else {
+            } else
                 reflectedAction = static_cast<DIR>(dist(gen) * 4);
-            }
 
             boardAction = stateActionSpace->direction_mappings.functionMaps[stateReflection.second]
                             .second[reflectedAction];
 
-            // snakeGame->printAll();
             stateReward = snakeGame->step(boardAction);
-
-            // std::cout << "Reflected state: " << newStateReflection.first << ", Reflection taken: " << newStateReflection.second << std::endl;
-            // std::cout << random << " | boardAction: " << boardAction << ", reflectionAction: " << reflectedAction << std::endl;
-            // std::cout << "Reward: " << get<2>(stateReward) << std::endl;
 
             /** If snake ate a fruit or moved to an empty space, do if block. If died or finished, do else block
              * Calculates the new state information and gets the max of the new states qtable
@@ -130,16 +122,12 @@ void train(SnakeGame* snakeGame, StateActionSpace* stateActionSpace) {
             // Updates the qtable
             stateActionSpace->fruitToStates[stateFruitLoc.first][stateFruitLoc.second][stateReflection.first][reflectedAction] += LEARNING_RATE * (get<2>(stateReward) + GAMMA * newMax  - stateActionSpace->fruitToStates[stateFruitLoc.first][stateFruitLoc.second][stateReflection.first][reflectedAction]);
 
-            // std::cout << "Updated QTable: " << std::endl;
-            // stateActionSpace->printQTable();
-            // std::cout << std::endl << std::endl;
-
             stateReflection = newStateReflection;
             stateFruitLoc = newStateFruitLoc;
 
         }
 
-        if (episode % 100'000 == 0) {
+        if (episode % 1'000'000 == 0) {
             if (episode != 0)
                 std::cout << episode << std::endl;
         }
@@ -175,7 +163,7 @@ int main()
         return out.str();
     };
 
-    std::string fileName = "models/model_BS" + formatDouble(BOARD_SIZE) + "_EP" + formatDouble(NUM_EPISODES) + "_R" + formatDouble(NUM_ROUNDS)
+    std::string fileName = "models/BAD_QTABLE_0/model_BS" + formatDouble(BOARD_SIZE) + "_EP" + formatDouble(NUM_EPISODES) + "_R" + formatDouble(NUM_ROUNDS)
                              + "_MXE" + formatDouble(MAX_EPSILON) + "_MNE" + formatDouble(MIN_EPSILON) + "_DR" + formatDouble(DECAY_RATE)
                              + "_G" + formatDouble(GAMMA) + "_LR" + formatDouble(LEARNING_RATE) + ".dat";
 

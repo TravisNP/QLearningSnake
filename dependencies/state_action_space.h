@@ -13,7 +13,7 @@ class StateActionSpace {
         int BOARD_SIZE;
 
         // Initial qtable value for death spots
-        int BAD_QTABLE_VALUE = -20;
+        int BAD_QTABLE_VALUE = 0;
 
         // Initial qtable value for not death spots
         int GOOD_QTABLE_VALUE = 0;

@@ -78,4 +78,24 @@ struct Model {
     }
 };
 
+// Contains ending information of a computer simulation: numRounds, result, and snakeLength
+struct CompInfo {
+    // Number of rounds the simulation ran
+    int numRounds;
+
+    // -1 for death, 0 for not finished, 1 for finished
+    int result;
+
+    // Length of the snake when simulation ended
+    int snakeLength;
+
+    // Default constructor
+    CompInfo()
+        : numRounds(0), result(0), snakeLength(0) {}
+
+    // Parametrized constructor
+    CompInfo(int _numRounds, int _result, int _snakeLength)
+        : numRounds(_numRounds), result(_result), snakeLength(_snakeLength) {}
+};
+
 #endif // CUSTOM_STRUCTS_H
