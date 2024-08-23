@@ -3,8 +3,8 @@
 #include "dependencies/map_serializer.h"
 
 int main(int argc, char* argv[]) {
-    if (argc != 2) {
-        std::cout << "Usage: ./test_model <model.dat>" << std::endl;
+    if (argc < 2) {
+        std::cout << "Usage: ./test_model <model.dat> <visualize or test>" << std::endl;
         return -1;
     }
 
@@ -33,6 +33,11 @@ int main(int argc, char* argv[]) {
 
 
     stateActionSpace->fruitToStates = model.qtable;
+    std::string visualizeOrTest = argv[2];
+    if (argc == 3 && visualizeOrTest == "visualize") {
+        snakeGame->playCompSnakeVisualize(stateActionSpace, 1'000);
+        return 0;
+    }
 
     const int numSimulations = 10'000;
     double averageLength = 0;

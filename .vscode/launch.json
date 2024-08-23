@@ -9,7 +9,7 @@
             "request": "launch",
             "name": "lldb Debug",
             "program": "${workspaceFolder}/test_model",
-            "args": ["models/model_BS4_EP0_R1000_MXE1_MNE0.01_DR0.0005_G0.95_LR0.7.dat"],
+            "args": ["models/BAD_QTABLE_N20/model_BS4_EP1e+08_R1000_MXE1_MNE0.01_DR0.0005_G0.95_LR0.7.dat", "visualize"],
             "cwd": "${workspaceFolder}"
         }
     ]
